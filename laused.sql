@@ -32,11 +32,11 @@ values (1, 'Female')
 insert into Gender (Id, Gender)
 values (2, 'Male')
 
---- ?
+--- lisab välisvõtme piirangu nimega tblPerson_GenderId_FK tabelile Person
 alter table Person add constraint tblPerson_GenderId_FK
 foreign key (GenderId) references Gender(Id)
 
--- ?
+-- sisestab 7 uut kirjet Person tabelisse
 insert into Person (Id, Name, Email, GenderId)
 values (1, 'Supermees', 's@s.com', 2)
 insert into Person (Id, Name, Email, GenderId)
@@ -55,11 +55,11 @@ values (7, 'Spiderman', 'spider@spiderman.com', 2)
 -- vaatame tabeli andmeid
 select * from Person
 
---- ?
+--- eemaldab välisvõtme piirangu
 alter table Person
 drop constraint tblPerson_GenderId_FK
 
--- ?
+-- lisab uue kirje tabelisse Gender
 insert into Gender (Id, Gender)
 values (3, 'Unknown')
 -- lisame võõrvõtme uuesti
@@ -74,7 +74,7 @@ select * from Gender
 insert into Person (Id, Name, Email)
 values (8, 'Test', 'Test')
 
----?
+--  lisab uue veeru nimega Age tabelisse Person
 alter table Person
 add Age nvarchar(10)
 
@@ -83,14 +83,14 @@ update Person
 set Age = 149
 where Id = 8
 
---?
+-- lisab Person tabelile vanusele, mis tagab, et vanus on vahemikus 1 kuni 149
 alter table Person
 add constraint CK_Person_Age check (Age > 0 and Age < 150)
 
 insert into Person (Id, Name, Email, GenderId, Age)
 values (9, 'Test', 'Test', 2, 160)
 
---?
+-- esmalt kuvab kõik isikud, siis kustutab isiku ID-ga 8 ja lõpuks kuvab uuesti kõik isikud, et näha muudatust.
 select * from Person
 go
 delete from Person where Id = 8
@@ -101,7 +101,7 @@ select * from Person
 alter table Person
 add City nvarchar(25)
 
--- ?
+-- valib kõik kirjed Person tabelist, kus City väärtus on 'Gotham'.
 select * from Person where City = 'Gotham'
 
 
@@ -109,49 +109,52 @@ select * from Person where City = 'Gotham'
 select * from Person where City <> 'Gotham'
 select * from Person where City != 'Gotham'
 
--- ?
+-- otsivad isikuid, kes on kas 20, 50 või 100 aastat vanad
 select *from Person where Age = 100 or 
 Age = 50 or Age = 20
 select * from Person where Age in (100, 50, 20)
 
 
---- ?
+-- leiab kõik isikud, kelle linna nimi algab tähega "n"
+-- kontrollib, kas isikul on e-posti aadressis '@' märk
 select * from Person where City like 'n%'
 select * from Person where Email like '%@%'
 
--- ?
+-- leiab need, kellel seda pole
 select * from Person where Email not like '%@%'
 
 --- näitab, kelle on emailis ees ja peale @-märki
 -- ainult üks täht
 select * from Person where Email like '_@_.com'
 
---?
+-- otsib isikuid, kelle nimi EI alga tähtedega W, A ega S, kasutades erilist sümbolit [^]
 select * from Person where Name like '[^WAS]%'
---- ?
+--- filtreerib isikud, kes elavad kas Gothamis või New Yorgis JA on vähemalt 40-aastased
 select * from Person where (City = 'Gotham' or City = 'New York')
 and Age >= 40
 
 ---võtab kolm esimest rida
 select top 3 * from Person
 
---- ?
+--- Näitab kõiki veerge ja ridu Person tabelis
+-- Näitab ainult vanuse ja nime veerud, piirates tulemuse 3 kirjega
 select * from Person
 select top 3 Age, Name from Person
 
---- ?
+-- Näitab 50 top kirjetest Person tabelist
 select top 50 percent * from Person
---?
+-- Teisendab vanuse arvuks enne sorteerimist
+-- Sorteerib otse vanuse veeru järgi
 select * from Person order by cast(Age as int)
 select * from Person order by Age
 
---?
+-- Arvutab kõikide isikute vanuste summa
 select sum(cast(Age as int)) from Person
 
---?
+-- Leiab kõige väiksema vanuse
 select min(cast(Age as int)) from Person
 
---?
+-- Leiab kõige suurema vanuse
 select max(cast(Age as int)) from Person
 
 select City, sum(cast(Age as int)) as TotalAge from Person group by City
@@ -175,7 +178,7 @@ Salary nvarchar(50),
 DepartmentId int
 )
 
---?
+-- Andmete sisestamine osakondadesse ja töötajatesse
 insert into Department (Id, DepartmentName, Location, DepartmentHead)
 values (1, 'IT', 'London', 'Rick')
 insert into Department (Id, DepartmentName, Location, DepartmentHead)
@@ -210,12 +213,12 @@ values (10, 'Russell', 'Male', 8800, NULL)
 
 select * from Employees
 
----?
+-- Näitab ainult unikaalseid nime ja osakonna ID kombinatsioone
 select distinct Name, DepartmentId from Employees
 
----?
+-- Arvutab kõigi töötajate kogupalga
 select sum(cast(Salary as int)) from Employees
----?
+-- Leiab väikseima palga
 select min(cast(Salary as int)) from Employees
 
 
@@ -228,7 +231,7 @@ add DepartmentId
 int null
 
 
---?
+-- lisab uue veeru nimega MiddleName tabelisse Employees
 alter table Employees
 add MiddleName nvarchar(30)
 
