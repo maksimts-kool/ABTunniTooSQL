@@ -136,3 +136,57 @@ FULL OUTER JOIN Department d ON e.DepartmentId = d.Id
 SELECT e.Name, d.DepartmentName 
 FROM Employees e
 CROSS JOIN Department d
+
+
+-- Näita ainult need isikut, kellel DepartmentName on NULL
+SELECT e.Name, d.DepartmentName 
+FROM Employees e
+LEFT JOIN Department d ON e.DepartmentId = d.Id
+WHERE D.DepartmentName IS NULL
+
+ALTER TABLE Employees ADD managerID int;
+UPDATE Employees SET managerID = 1
+
+UPDATE Employees SET managerID = 2
+WHERE Gender = 'Male'
+
+
+-- Table manager
+CREATE TABLE manager(
+id INT PRIMARY KEY,
+managerName VARCHAR(25)
+)
+
+INSERT INTO manager
+VALUES (1, 'Roman'), (2, 'Nikita')
+
+SELECT * FROM manager
+SELECT * FROM Employees
+
+-- teha kõik join'id
+-- ja mida nad teevad
+
+-- INNER JOIN
+-- Kus on olemas väärtus
+SELECT e.Name, m.managerName FROM Employees e
+INNER JOIN manager m ON e.DepartmentId = m.Id
+
+-- LEFT JOIN
+-- Kõik Employees
+SELECT e.Name, m.managerName FROM Employees e
+LEFT JOIN manager m ON e.DepartmentId = m.Id
+
+-- RIGHT JOIN
+-- Kõik manager
+SELECT e.Name, m.managerName FROM Employees e
+RIGHT JOIN manager m ON e.DepartmentId = m.Id
+
+-- OUTER JOIN
+-- Kõik Employees ja manager
+SELECT e.Name, m.managerName FROM Employees e
+FULL OUTER JOIN manager m ON e.DepartmentId = m.Id
+
+-- CROSS JOIN
+-- All manager for every Employees
+SELECT e.Name, m.managerName FROM Employees e
+CROSS JOIN manager m
