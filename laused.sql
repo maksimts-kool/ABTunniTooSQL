@@ -103,7 +103,6 @@ select * from Department
 -- JOIN
 SELECT * FROM Employees
 JOIN Department ON Employees.DepartmentId = Department.Id
-
 -- Lihtsamaks
 SELECT e.Name, e.Salary, d.DepartmentName FROM Employees e
 JOIN Department d ON e.DepartmentId = d.Id
